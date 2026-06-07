@@ -1,0 +1,109 @@
+<apex:page controller="InvoicePDFController"
+           renderAs="pdf"
+           applyBodyTag="false"
+           showHeader="false"
+           sidebar="false"
+           standardStylesheets="false"
+           readOnly="true">
+<html>
+<head>
+<style>
+body{font-family:Arial,sans-serif;font-size:12px;margin:40px;color:#333}
+h2{margin:0;color:#2c3e50}
+.header-tbl{width:100%;border-collapse:collapse;margin-bottom:25px}
+.header-tbl td{border:none;vertical-align:top;padding:0}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th{background:#2c3e50;color:white;padding:8px;text-align:left;font-size:12px}
+td{padding:8px;border-bottom:1px solid #ddd;font-size:12px}
+.totals td{border:none;padding:5px 8px}
+.footer{margin-top:40px;font-size:10px;color:#999;text-align:center;border-top:1px solid #ddd;padding-top:10px}
+.error{color:red;font-weight:bold;padding:10px;border:1px solid red;margin:10px 0}
+</style>
+</head>
+<body>
+
+    <apex:outputPanel rendered="{!NOT(ISBLANK(errorMessage))}">
+        <div class="error">Error: <apex:outputText value="{!errorMessage}"/></div>
+    </apex:outputPanel>
+
+    <apex:outputPanel rendered="{!ISBLANK(errorMessage)}">
+        <table class="header-tbl">
+            <tr>
+                <td>
+                    <h2>ACME Corp</h2>
+                    <p style="margin:4px 0 0 0;">123 Main St, City, Country</p>
+                </td>
+                <td style="text-align:right;">
+                    <h3 style="margin:0;color:#2c3e50;">
+                        Invoice #<apex:outputText value="{!invoice.Invoice_Number__c}"/>
+                    </h3>
+                    <p style="margin:4px 0;">
+                        Date: <apex:outputText value="{0,date,dd/MM/yyyy}">
+                            <apex:param value="{!NOW()}"/>
+                        </apex:outputText>
+                    </p>
+                    <p style="margin:4px 0;">
+                        Status: <apex:outputText value="{!invoice.Status__c}"/>
+                    </p>
+                </td>
+            </tr>
+        </table>
+
+        <p>
+            <strong>Bill To: </strong>
+            <apex:outputText value="{!invoice.Opportunity__r.Account.Name}"
+                             rendered="{!NOT(ISBLANK(invoice.Opportunity__r.Account.Name))}"/>
+            <apex:outputText value="N/A"
+                             rendered="{!ISBLANK(invoice.Opportunity__r.Account.Name)}"/>
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Tax %</th>
+                    <th>Line Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!lines}" var="line">
+                    <tr>
+                        <td><apex:outputText value="{!line.Product_Name__c}"/></td>
+                        <td><apex:outputText value="{!line.Quantity__c}"/></td>
+                        <td><apex:outputText value="{!line.Unit_Price__c}"/></td>
+                        <td><apex:outputText value="{!line.Tax_Rate__c}"/>%</td>
+                        <td><apex:outputText value="{!line.Line_Total__c}"/></td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+
+        <table class="totals" style="width:40%;margin-left:60%;margin-top:20px;">
+            <tr>
+                <td><strong>Net Total</strong></td>
+                <td style="text-align:right;">
+                    <apex:outputText value="{!invoice.Total_Net__c}"/>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Tax</strong></td>
+                <td style="text-align:right;">
+                    <apex:outputText value="{!invoice.Total_Tax__c}"/>
+                </td>
+            </tr>
+            <tr style="border-top:2px solid #2c3e50;">
+                <td><strong>Gross Total</strong></td>
+                <td style="text-align:right;">
+                    <strong><apex:outputText value="{!invoice.Total_Gross__c}"/></strong>
+                </td>
+            </tr>
+        </table>
+    </apex:outputPanel>
+
+    <div class="footer">Thank you.</div>
+
+</body>
+</html>
+</apex:page>

@@ -1,0 +1,149 @@
+<!-- invoiceGenerator.html -->
+<template>
+  <lightning-card title="Generate Invoice">
+
+    <!-- Editable Line Items Table -->
+    <div class="slds-p-around_medium">
+      <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+        <thead>
+          <tr class="slds-line-height_reset">
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Tax %</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <template for:each={lineItems} for:item="line">
+            <tr key={line.id}>
+              <td>
+                <lightning-input
+                  value={line.productName}
+                  data-id={line.id}
+                  data-field="productName"
+                  onchange={handleLineChange}
+                  label="Product"
+                  variant="label-hidden">
+                </lightning-input>
+              </td>
+              <td>
+                <lightning-input
+                  type="number"
+                  value={line.quantity}
+                  data-id={line.id}
+                  data-field="quantity"
+                  onchange={handleLineChange}
+                  label="Qty"
+                  variant="label-hidden"
+                  min="1">
+                </lightning-input>
+              </td>
+              <td>
+                <lightning-input
+                  type="number"
+                  value={line.unitPrice}
+                  data-id={line.id}
+                  data-field="unitPrice"
+                  onchange={handleLineChange}
+                  label="Unit Price"
+                  variant="label-hidden"
+                  min="0">
+                </lightning-input>
+              </td>
+              <td>
+                <lightning-input
+                  type="number"
+                  value={line.taxRate}
+                  data-id={line.id}
+                  data-field="taxRate"
+                  onchange={handleLineChange}
+                  label="Tax %"
+                  variant="label-hidden"
+                  min="0"
+                  max="100">
+                </lightning-input>
+              </td>
+              <td>
+                <lightning-button-icon
+                  icon-name="utility:delete"
+                  data-id={line.id}
+                  onclick={removeLine}
+                  variant="bare"
+                  alternative-text="Remove line">
+                </lightning-button-icon>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+
+      <!-- Add Line Button -->
+      <div class="slds-m-top_small">
+        <lightning-button
+          label="+ Add Line"
+          onclick={addLine}>
+        </lightning-button>
+      </div>
+
+      <!-- Spinner + Generate Button -->
+      <div class="slds-m-top_medium" style="position: relative; min-height: 50px;">
+        <template if:true={isLoading}>
+          <lightning-spinner
+            alternative-text="Generating invoice..."
+            size="medium">
+          </lightning-spinner>
+        </template>
+
+        <template if:true={isAsync}>
+          <div class="slds-notify slds-notify_alert slds-theme_info slds-m-bottom_small">
+            <span>Large invoice queued — you will be notified when ready.</span>
+          </div>
+        </template>
+
+       <lightning-button
+    label="Generate Invoice"
+    onclick={handleGenerateInvoice}
+    disabled={isLoading}
+    variant="brand">
+</lightning-button>
+      </div>
+
+      <!-- PDF Preview Section -->
+      <template if:true={pdfUrl}>
+        <div class="slds-m-top_large">
+
+          <!-- Header row with label and download link -->
+          <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+            <span class="slds-text-heading_small">Invoice Preview</span>
+            <a href={downloadUrl} target="_blank">
+              <lightning-button-icon
+                icon-name="utility:download"
+                alternative-text="Download PDF"
+                variant="border">
+              </lightning-button-icon>
+              Download PDF
+            </a>
+          </div>
+
+          <!-- iframe — uses versionId URL which is iframe-friendly -->
+          <iframe
+            src={pdfUrl}
+            width="100%"
+            height="700px"
+            style="border: 1px solid #dddbda; border-radius: 4px; display: block;">
+          </iframe>
+
+        </div>
+      </template>
+
+      <!-- Error message -->
+      <template if:true={errorMessage}>
+        <div class="slds-notify slds-notify_alert slds-theme_error slds-m-top_small">
+          <span>{errorMessage}</span>
+        </div>
+      </template>
+
+    </div>
+  </lightning-card>
+</template>

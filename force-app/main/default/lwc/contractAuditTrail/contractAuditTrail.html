@@ -1,0 +1,77 @@
+<template>
+    <lightning-card title="Contract Audit Trail" icon-name="utility:trail">
+
+        <!-- Loading spinner -->
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-p-around_medium">
+                <lightning-spinner alternative-text="Loading..." size="small"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Error message -->
+        <template if:true={error}>
+            <div class="slds-p-around_medium">
+                <lightning-formatted-text value={error}></lightning-formatted-text>
+            </div>
+        </template>
+
+        <!-- Audit table -->
+        <template if:false={isLoading}>
+            <div class="slds-p-around_small">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th>Field</th>
+                            <th>Old Value</th>
+                            <th>New Value</th>
+                            <th>Changed By</th>
+                            <th>Date / Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={auditRows} for:item="row">
+                            <tr key={row.Change_Time__c}>
+                                <td>{row.Field_Name__c}</td>
+                                <td>{row.Old_Value__c}</td>
+                                <td>{row.New_Value__c}</td>
+                                <td>{row.Changed_By__c}</td>
+                                <td>
+                                    <lightning-formatted-date-time
+                                        value={row.Change_Time__c}
+                                        year="numeric"
+                                        month="short"
+                                        day="2-digit"
+                                        hour="2-digit"
+                                        minute="2-digit">
+                                    </lightning-formatted-date-time>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+
+                <!-- No records message -->
+                <template if:true={noRecords}>
+                    <div class="slds-align_absolute-center slds-p-medium">
+                        <p>No audit records found for this contract.</p>
+                    </div>
+                </template>
+
+                <!-- Pagination buttons -->
+                <div class="slds-grid slds-grid_align-spread slds-p-top_small">
+                    <lightning-button
+                        label="← Previous"
+                        onclick={handlePrev}
+                        disabled={isPrevDisabled}>
+                    </lightning-button>
+                    <lightning-button
+                        label="Next →"
+                        onclick={handleNext}
+                        disabled={isNextDisabled}>
+                    </lightning-button>
+                </div>
+            </div>
+        </template>
+
+    </lightning-card>
+</template>

@@ -1,0 +1,35 @@
+<template>
+    <lightning-combobox name="RegionPicklist" label="Region" options={options} value={region} onchange={handleChange}></lightning-combobox>
+    <lightning-card>    <c-kpi-card title="Open Pipeline" value={pipeline}  card-id="pipeline" oncardselect={handleCardSelect}></c-kpi-card>
+</lightning-card>
+    <lightning-card>    <c-kpi-card title="Won Revenue" value={wonRevenue}  card-id="wonRevenue" oncardselect={handleCardSelect}></c-kpi-card>
+</lightning-card>
+    <lightning-card>    <c-kpi-card title="Win Rate" value={winRate}  card-id="winRate" oncardselect={handleCardSelect}></c-kpi-card>
+</lightning-card>
+    <lightning-card>    <c-kpi-card title="Avg Deal Size" value={avgDealSize}  card-id="avgDealSize" oncardselect={handleCardSelect}></c-kpi-card>
+</lightning-card>
+    
+    
+    
+
+    <template lwc:if={cardSelected} >
+        <lightning-card>
+        <template lwc:if={isLoading}>
+            <lightning-spinner 
+                    alternative-text="Loading data..." 
+                    size="medium" 
+                    variant="brand">
+            </lightning-spinner>
+        </template>
+        <template lwc:elseif={hasOpportunities}>
+           <template for:each={opportunities} for:item="opp" >
+                <p key={opp.Id}>{opp.Name}  {opp.Amount}  {opp.StageName}</p>
+           </template>
+        </template>
+        <template lwc:else>
+            <p>No record found</p>
+        </template>
+        </lightning-card>
+    </template>
+
+</template>

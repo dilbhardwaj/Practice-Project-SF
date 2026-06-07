@@ -1,0 +1,38 @@
+<!--
+    kanbanCard.html
+    Renders a single case card.
+    Sets draggable="true" and fires drag events.
+    Emits a custom "cardmoved" event on drop is NOT here —
+    drag events bubble up; the column handles the drop.
+-->
+<template>
+    <div
+        class={cardClass}
+        draggable="true"
+        ondragstart={handleDragStart}
+        ondragend={handleDragEnd}
+        data-id={card.Id}>
+
+        <!-- priority indicator stripe on left -->
+        <div class={priorityBadgeClass}></div>
+
+        <div class="card-body">
+            <!-- case number + subject -->
+            <div class="card-title">
+                <span class="case-number">{card.CaseNumber}</span>
+                <span class="subject" title={card.Subject}>{card.Subject}</span>
+            </div>
+
+            <!-- owner and date row -->
+            <div class="card-meta">
+                <span title="Owner">👤 {card.Owner.Name}</span>
+                <span title="Created">{formattedDate}</span>
+            </div>
+
+            <!-- priority badge -->
+            <div class="card-footer">
+                <span class={priorityClass}>{card.Priority}</span>
+            </div>
+        </div>
+    </div>
+</template>

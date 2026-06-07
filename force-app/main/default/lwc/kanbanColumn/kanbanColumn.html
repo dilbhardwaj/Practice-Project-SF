@@ -1,0 +1,51 @@
+<!--
+    kanbanColumn.html
+    Renders one status column with its list of cards.
+    Handles dragover and drop events from the HTML5 drag API.
+    Fires a custom "casedropped" event up to the parent board.
+-->
+<template>
+    <div
+        class={columnClass}
+        ondragover={handleDragOver}
+        ondragenter={handleDragEnter}
+        ondragleave={handleDragLeave}
+        ondrop={handleDrop}>
+
+        <!-- column header with status label and count badge -->
+        <div class="column-header">
+            <span class="column-title">{status}</span>
+            <span class="column-count">{cards.length}</span>
+
+            <!-- spinner shown while save is in progress -->
+            <template if:true={isLoading}>
+                <div class="column-spinner">
+                    <lightning-spinner
+                        alternative-text="Saving..."
+                        size="x-small">
+                    </lightning-spinner>
+                </div>
+            </template>
+        </div>
+
+        <!-- scrollable cards area -->
+        <div class="cards-container">
+            <template if:true={hasCards}>
+                <template for:each={cards} for:item="card">
+                    <c-kanban-card
+                        key={card.Id}
+                        card={card}>
+                    </c-kanban-card>
+                </template>
+            </template>
+
+            <!-- empty state when column has no cards -->
+            <template if:false={hasCards}>
+                <div class="empty-column">
+                    <span>No cases</span>
+                </div>
+            </template>
+        </div>
+
+    </div>
+</template>

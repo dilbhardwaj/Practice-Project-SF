@@ -1,0 +1,54 @@
+<!--
+    kanbanBoard.html
+    The main parent component.
+    Renders a column for each status in the statusColumns array.
+    Listens for "casedropped" from columns via event bubbling.
+-->
+<template>
+    <lightning-card title="Case Kanban Board" icon-name="standard:case">
+        <div slot="actions">
+            <lightning-button
+                label="Refresh"
+                icon-name="utility:refresh"
+                onclick={handleRefresh}>
+            </lightning-button>
+        </div>
+
+        <div class="slds-p-around_medium">
+
+            <!-- full board loading state on first load -->
+            <template if:true={isPageLoading}>
+                <div class="board-loading">
+                    <lightning-spinner
+                        alternative-text="Loading cases..."
+                        size="medium">
+                    </lightning-spinner>
+                    <p class="slds-text-align_center slds-m-top_large">Loading cases...</p>
+                </div>
+            </template>
+
+            <!-- error state -->
+            <template if:true={hasError}>
+                <div class="slds-notify slds-notify_alert slds-alert_error">
+                    <p>{errorMessage}</p>
+                </div>
+            </template>
+
+            <!-- the kanban board columns -->
+            <template if:false={isPageLoading}>
+                <div class="board-container">
+                    <template for:each={statusColumns} for:item="col">
+                        <c-kanban-column
+                            key={col.status}
+                            status={col.status}
+                            cards={col.cards}
+                            is-loading={col.isLoading}
+                            oncasedropped={handleCaseDropped}>
+                        </c-kanban-column>
+                    </template>
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

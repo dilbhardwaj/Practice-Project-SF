@@ -1,0 +1,74 @@
+/* kanbanColumn.css */
+
+.kanban-column {
+    background: #f4f6f9;
+    border-radius: 10px;
+    padding: 0;
+    min-width: 240px;
+    max-width: 280px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, background 0.2s;
+    min-height: 400px;
+}
+
+/* highlight when a card is hovering over this column */
+.kanban-column.drag-over {
+    border-color: #0176d3;
+    background: #e8f4fd;
+}
+
+.column-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+}
+
+.column-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #3a3a3a;
+    flex: 1;
+}
+
+.column-count {
+    background: #0176d3;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.column-spinner {
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.cards-container {
+    padding: 12px 10px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 100px;
+}
+
+.empty-column {
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+    padding: 20px;
+    border: 2px dashed #ddd;
+    border-radius: 6px;
+    margin: 4px;
+}
