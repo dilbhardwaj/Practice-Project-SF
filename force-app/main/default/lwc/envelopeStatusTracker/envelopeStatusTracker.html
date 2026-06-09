@@ -1,0 +1,31 @@
+<template>
+    <lightning-card title="Envelope Status" >
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading">
+            </lightning-spinner>
+        </template>
+
+        <div class="slds-p-around_medium">
+            <p>
+                <strong> Status:</strong>{status}
+            </p>
+            <template if:true={hasSplitDocuments}>
+                <p><Strong> Split Documents:</Strong></p>
+                    <template for:each={splitDocuments} for:item="doc">
+                        <div key={doc.Id}>
+                            <a href={doc.downloadUrl} target='_blank'>
+                                {doc.Title}
+                            </a>
+                        </div>
+                    </template>
+            </template>
+
+            <template if:true={isFailedStatus}>
+                <lightning-button label="Retry" variant="destructive" onclick={handleRetry}></lightning-button>
+            </template>
+            <template if:true={errorMessage}>
+                <p> {errorMessage}</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>
